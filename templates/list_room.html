@@ -29,9 +29,9 @@
         </td>
         <td>{{ item.room.projector|yesno:"✔,✘" }}</td>
         <td>
-          <a href="{% url 'modify_room' item.room.id %}">Edit</a> |
-          <a href="{% url 'delete_room' item.room.id %}">Smazat</a> |
-          <a href="{% url 'reserve_room' item.room.id %}">Rezervovat</a>
+          <a href="{% url 'modify_room' item.room.id %}">✏️ Upravit</a>
+          <a href="{% url 'delete_room' item.room.id %}">🗑️ Smazat</a>
+          <a href="{% url 'reserve_room' item.room.id %}">📅 Rezervovat</a>
         </td>
       </tr>
       {% endfor %}

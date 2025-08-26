@@ -47,7 +47,13 @@ def list_room(request):
     })
 
 def detail_room(request: HttpRequest, room_id):
-    pass
+    room = get_object_or_404(Room, id=room_id)
+    future_reservations = room.reservations.filter(date__gte=date.today()).order_by('date')
+
+    return render(request, 'detail_room.html', {
+        'room': room,
+        'reservations': future_reservations
+    })
 
 
 def modify_room(request: HttpRequest, room_id):

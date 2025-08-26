@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Detail místnosti: {{ room.name }}</h1>
+
+  <p><strong>Kapacita:</strong> {{ room.capacity }}</p>
+  <p><strong>Projektor:</strong> {{ room.projector|yesno:"✔,✘" }}</p>
+
+  <h2>Rezervace (budoucí):</h2>
+  {% if reservations %}
+    <ul>
+      {% for res in reservations %}
+        <li>{{ res.date }} – {{ res.comment }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Žádné nadcházející rezervace.</p>
+  {% endif %}
+
+  <hr>
+
+  <a href="{% url 'modify_room' room.id %}">✏️ Upravit</a> |
+  <a href="{% url 'delete_room' room.id %}">🗑️ Smazat</a> |
+  <a href="{% url 'reserve_room' room.id %}">📅 Rezervovat</a>
+
+{% endblock %}
