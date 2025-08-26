@@ -4,38 +4,41 @@
 
 <h1>Seznam místností</h1>
 
-
-  {% if rooms %}
-    <table border="1" cellpadding="8">
-      <thead>
-        <tr>
-          <th>Název</th>
-          <th>Kapacita</th>
-          <th>Rezervace dnes</th>
-          <th>Projektor</th>
-          <th>Akce</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for room in rooms %}
-        <tr>
-          <td>
-            <a href="{% url 'detail_room' room.id %}">{{ room.name }}</a>
-          </td>
-          <td>{{ room.capacity }}</td>
-          <td>Neověřeno</td>
-          <td>{{ room.projector|yesno:"✔,✘" }}</td>
-          <td>
-            <a href="{% url 'modify_room' room.id %}">Edit</a> |
-            <a href="{% url 'delete_room' room.id %}">Smazat</a> |
-            <a href="{% url 'reserve_room' room.id %}">Rezervovat</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No rooms available.</p>
-  {% endif %}
+{% if room_data %}
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Název</th>
+        <th>Kapacita</th>
+        <th>Rezervace dnes</th>
+        <th>Projektor</th>
+        <th>Akce</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in room_data %}
+      <tr>
+        <td><a href="{% url 'detail_room' item.room.id %}">{{ item.room.name }}</a></td>
+        <td>{{ item.room.capacity }}</td>
+        <td>
+          {% if item.reserved %}
+            <span style="color: red;">Rezervovaná</span>
+          {% else %}
+            <span style="color: green;">Volná</span>
+          {% endif %}
+        </td>
+        <td>{{ item.room.projector|yesno:"✔,✘" }}</td>
+        <td>
+          <a href="{% url 'modify_room' item.room.id %}">Edit</a> |
+          <a href="{% url 'delete_room' item.room.id %}">Smazat</a> |
+          <a href="{% url 'reserve_room' item.room.id %}">Rezervovat</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No rooms available.</p>
+{% endif %}
 
 {% endblock %}

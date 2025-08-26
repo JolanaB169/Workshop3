@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Rezervace: {{ room.name }}</h1>
+
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li style="color: red">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+    {% csrf_token %}
+        <label for="date">Datum rezervace:</label><br>
+        <input type="date" name="date" id="date" required><br><br>
+
+        <label for="comment">Komentář:</label><br>
+        <textarea name="comment" id="comment" rows="4" cols="40"></textarea><br><br>
+
+        <button type="submit">Rezervovat</button>
+  </form>
+
+{% endblock %}

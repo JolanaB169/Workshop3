@@ -1,8 +1,8 @@
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.utils.timezone import now
-from .models import Room
+from datetime import date
+from .models import Room, Reservation
 
 def home_page_view(request):
     return render(request, 'home.html')
@@ -30,16 +30,23 @@ def add_room(request: HttpRequest):
     return render(request, 'add_room.html')
 
 
-def list_room(request: HttpRequest):
+def list_room(request):
     rooms = Room.objects.all()
-    today = now().date()
+    today = date.today()
+
+    room_data = []
+    for room in rooms:
+        is_reserved_today = room.reservations.filter(date=today).exists()
+        room_data.append({
+            'room': room,
+            'reserved': is_reserved_today
+        })
 
     return render(request, 'list_room.html', {
-        'rooms': rooms,
-        'today': today,
+        'room_data': room_data,
     })
 
-def detail_room(request: HttpRequest):
+def detail_room(request: HttpRequest, room_id):
     pass
 
 
@@ -66,11 +73,35 @@ def modify_room(request: HttpRequest, room_id):
         'room': room,
     })
 
-
 def delete_room(request: HttpRequest, room_id):
     room = get_object_or_404(Room, id=room_id)
     room.delete()
     return redirect("list_room")
 
-def reserve_room(request: HttpRequest):
-    pass
+def reserve_room(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    if request.method == 'POST':
+        booking_date = request.POST.get('date')
+        comment = request.POST.get('comment')
+
+        try:
+            booking_date_obj = date.fromisoformat(booking_date)
+        except ValueError:
+            messages.error(request, 'Zadejte platné datum.')
+            return render(request, 'reserve_room.html', {'room': room})
+
+        if booking_date_obj < date.today():
+            messages.error(request, 'Rezervace nelze provést zpětně.')
+            return render(request, 'reserve_room.html', {'room': room})
+
+        existing = room.reservations.filter(date=booking_date_obj).exists()
+        if existing:
+            messages.error(request, 'Místnost je již na tento den rezervována.')
+            return render(request, 'reserve_room.html', {'room': room})
+
+        reservation = Reservation(room=room, date=booking_date_obj, comment=comment)
+        reservation.save()
+        return redirect('list_room')
+    else:
+        return render(request, 'reserve_room.html', {'room': room})
+
