@@ -23,4 +23,19 @@
         <button type="submit">Rezervovat</button>
   </form>
 
+    <hr>
+
+<h2>Rezervace (budoucí):</h2>
+
+    {% if reservations %}
+    <ul>
+      {% for res in reservations %}
+        <li>{{ res.date }} – {{ res.comment }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+        <p>Žádné nadcházející rezervace.</p>
+    {% endif %}
+
+
 {% endblock %}

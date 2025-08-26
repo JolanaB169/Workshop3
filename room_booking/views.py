@@ -86,6 +86,7 @@ def delete_room(request: HttpRequest, room_id):
 
 def reserve_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
+    future_reservations = room.reservations.filter(date__gte=date.today()).order_by('date')
     if request.method == 'POST':
         booking_date = request.POST.get('date')
         comment = request.POST.get('comment')
@@ -94,20 +95,20 @@ def reserve_room(request, room_id):
             booking_date_obj = date.fromisoformat(booking_date)
         except ValueError:
             messages.error(request, 'Zadejte platné datum.')
-            return render(request, 'reserve_room.html', {'room': room})
+            return render(request, 'reserve_room.html', {'room': room, 'reservations': future_reservations})
 
         if booking_date_obj < date.today():
             messages.error(request, 'Rezervace nelze provést zpětně.')
-            return render(request, 'reserve_room.html', {'room': room})
+            return render(request, 'reserve_room.html', {'room': room, 'reservations': future_reservations})
 
         existing = room.reservations.filter(date=booking_date_obj).exists()
         if existing:
             messages.error(request, 'Místnost je již na tento den rezervována.')
-            return render(request, 'reserve_room.html', {'room': room})
+            return render(request, 'reserve_room.html', {'room': room, 'reservations': future_reservations})
 
         reservation = Reservation(room=room, date=booking_date_obj, comment=comment)
         reservation.save()
         return redirect('list_room')
     else:
-        return render(request, 'reserve_room.html', {'room': room})
+        return render(request, 'reserve_room.html', {'room': room, 'reservations': future_reservations})
 
