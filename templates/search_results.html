@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Výsledky vyhledávání</h2>
+
+{% if rooms %}
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Název</th>
+        <th>Kapacita</th>
+        <th>Projektor</th>
+        <th>Akce</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for room in rooms %}
+      <tr>
+        <td><a href="{% url 'detail_room' room.id %}">{{ room.name }}</a></td>
+        <td>{{ room.capacity }}</td>
+        <td>{{ room.projector|yesno:"✔,✘" }}</td>
+        <td>
+          <a href="{% url 'modify_room' room.id %}">✏️</a>
+          <a href="{% url 'delete_room' room.id %}">🗑️</a>
+          <a href="{% url 'reserve_room' room.id %}">📅</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>Pro zadaná kritéria vyhledávání nejsou k dispozici žádné místnosti. </p>
+    <a href="{% url 'add_room' %}">Přidat místnost</a>
+{% endif %}
+
+{% endblock %}

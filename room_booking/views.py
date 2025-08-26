@@ -112,3 +112,29 @@ def reserve_room(request, room_id):
     else:
         return render(request, 'reserve_room.html', {'room': room, 'reservations': future_reservations})
 
+def search_room(request):
+    name = request.GET.get('name', '').strip()
+    capacity = request.GET.get('capacity')
+    projector = request.GET.get('projector')
+    today = date.today()
+
+    rooms = Room.objects.all()
+
+    if name:
+        rooms = rooms.filter(name__icontains=name)
+    if capacity and capacity.isdigit():
+        rooms = rooms.filter(capacity__gte=int(capacity))
+    if projector:
+        rooms = rooms.filter(projector=True)
+
+    available_rooms = []
+    for room in rooms:
+        if not room.reservations.filter(date=today).exists():
+            available_rooms.append(room)
+
+    context = {
+        'rooms': available_rooms,
+        'searched': True
+    }
+
+    return render(request, 'search_results.html', context)

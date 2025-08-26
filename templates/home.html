@@ -7,4 +7,19 @@
     <a href="{% url 'add_room' %}">Přidat místnost</a>
     <a href="{% url 'list_room' %}">Seznam místností</a>
 
+
+    <form method="get" action="{% url 'search_room' %}">
+        <label for="name">Název místnosti:</label>
+        <input type="text" name="name">
+
+        <label for="capacity">Min. kapacita:</label>
+        <input type="number" name="capacity" min="1">
+
+        <label>
+        <input type="checkbox" name="projector"> Projektor
+        </label>
+
+  <button type="submit">Hledat</button>
+</form>
+
 {% endblock %}
