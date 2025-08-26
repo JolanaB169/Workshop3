@@ -1,5 +1,5 @@
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils.timezone import now
 from .models import Room
@@ -46,8 +46,10 @@ def detail_room(request: HttpRequest):
 def modify_room(request: HttpRequest):
     pass
 
-def delete_room(request: HttpRequest):
-    pass
+def delete_room(request: HttpRequest, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    room.delete()
+    return redirect("list_room")
 
 def reserve_room(request: HttpRequest):
     pass
