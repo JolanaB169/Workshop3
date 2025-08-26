@@ -43,8 +43,29 @@ def detail_room(request: HttpRequest):
     pass
 
 
-def modify_room(request: HttpRequest):
-    pass
+def modify_room(request: HttpRequest, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    if request.method == "POST":
+        name = request.POST.get("name")
+        capacity = request.POST.get("capacity")
+        projector = request.POST.get("projector") == 'on'
+
+        if not name:
+            messages.error(request, "Prosím zadej název místonosti.")
+        elif Room.objects.filter(name=name).exists():
+            messages.error(request, "Místnost s tímto názvem již existuje.")
+        elif not capacity.isdigit() or int(capacity) <= 0:
+            messages.error(request, "Kapacita musí být kladné číslo.")
+        else:
+            room.name = name
+            room.capacity = int(capacity)
+            room.projector = projector
+            room.save()
+            return redirect("list_room")
+    return render(request, 'modify_room.html', {
+        'room': room,
+    })
+
 
 def delete_room(request: HttpRequest, room_id):
     room = get_object_or_404(Room, id=room_id)
