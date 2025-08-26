@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environment
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# VSCode settings (pokud používáš)
+.vscode/
+
+# Django
+*.log
+db.sqlite3
+/static/
+media/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Env variables
+.env
