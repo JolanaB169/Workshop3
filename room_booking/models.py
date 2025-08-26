@@ -8,3 +8,14 @@ class Room(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Reservation(models.Model):
+    date = models.DateField()
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='reservations')
+    comment = models.TextField()
+    class Meta:
+        unique_together = ('room', 'date')
+
+    def __str__(self):
+        return f"{self.room.name} - {self.date}"
