@@ -1,7 +1,11 @@
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.utils.timezone import now
 from .models import Room
+
+def home_page_view(request):
+    return render(request, 'home.html')
 
 def add_room(request: HttpRequest):
     if request.method == "POST":
@@ -22,9 +26,28 @@ def add_room(request: HttpRequest):
                 projector=projector
             )
             messages.success(request, "Místnost přidána.")
-            return redirect("room_list")
+            return redirect("list_room")
     return render(request, 'add_room.html')
 
 
+def list_room(request: HttpRequest):
+    rooms = Room.objects.all()
+    today = now().date()
+
+    return render(request, 'list_room.html', {
+        'rooms': rooms,
+        'today': today,
+    })
+
+def detail_room(request: HttpRequest):
+    pass
 
 
+def modify_room(request: HttpRequest):
+    pass
+
+def delete_room(request: HttpRequest):
+    pass
+
+def reserve_room(request: HttpRequest):
+    pass
