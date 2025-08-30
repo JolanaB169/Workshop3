@@ -4,11 +4,13 @@
 
 <h1>ÚVODNÍ STRANA</h1>
 
-    <a href="{% url 'add_room' %}">Přidat místnost</a>
-    <a href="{% url 'list_room' %}">Seznam místností</a>
+    <a href="{% url 'add_room' %}">Přidat místnost</a><br><br>
 
+    <a href="{% url 'list_room' %}">Seznam místností</a><br><br>
 
-    <form method="get" action="{% url 'search_room' %}">
+<h4>Hledat místnost:</h4>
+
+    <form method="get" action="{% url 'search_room' %}"><br>
         <label for="name">Název místnosti:</label>
         <input type="text" name="name">
 

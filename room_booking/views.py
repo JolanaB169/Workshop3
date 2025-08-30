@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from datetime import date
-from .models import Room, Reservation
+from .models import Room, reservation
 
 def home_page_view(request):
     return render(request, 'home.html')
